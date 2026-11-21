@@ -2,14 +2,24 @@ import crypto from "node:crypto";
 import { SEED_ISSUES } from "../utils/seedData.js";
 import { triageIssue } from "./geminiTriageService.js";
 
+/** Bounded capacity for FIFO municipal grievance store */
 export const MAX_STORE_CAPACITY = 100;
 
 let issuesStore = SEED_ISSUES.map((issue) => ({ ...issue }));
 
+/**
+ * Resets the in-memory grievance store to initial seed state.
+ */
 export function resetStore() {
   issuesStore = SEED_ISSUES.map((issue) => ({ ...issue }));
 }
 
+/**
+ * Checks whether an issue matches given filter criteria.
+ * @param {object} issue - Target issue record
+ * @param {object} filters - { status, category, search }
+ * @returns {boolean} Match result
+ */
 export function matchesFilter(issue, { status, category, search }) {
   if (status && issue.status !== status) return false;
   if (category && issue.category !== category) return false;
@@ -21,22 +31,28 @@ export function matchesFilter(issue, { status, category, search }) {
   return true;
 }
 
+/**
+ * Retrieves all issues matching optional query filters.
+ * @param {object} [filters={}] - Optional filters
+ * @returns {Array<object>} Matching issue records
+ */
 export function getIssues(filters = {}) {
   return issuesStore
     .filter((issue) => matchesFilter(issue, filters))
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 }
 
+/**
+ * Retrieves a single issue by its unique ID.
+ * @param {string} id - Issue ID
+ * @returns {object|null} Found issue or null
+ */
 export function getIssueById(id) {
   return issuesStore.find((issue) => issue.id === id) || null;
 }
 
-export async function createIssue(input) {
-  const triage = await triageIssue(input);
-  const now = new Date().toISOString();
-  const id = `civic-${Date.now()}-${crypto.randomBytes(3).toString("hex")}`;
-
-  const newIssue = {
+function buildNewIssueRecord(input, triage, id, now) {
+  return {
     id,
     title: input.title.trim(),
     description: input.description.trim(),
@@ -53,6 +69,18 @@ export async function createIssue(input) {
     createdAt: now,
     updatedAt: now
   };
+}
+
+/**
+ * Creates and stores a new citizen issue with AI triage.
+ * @param {object} input - Citizen issue payload
+ * @returns {Promise<object>} Created issue record
+ */
+export async function createIssue(input) {
+  const triage = await triageIssue(input);
+  const now = new Date().toISOString();
+  const id = `civic-${Date.now()}-${crypto.randomBytes(3).toString("hex")}`;
+  const newIssue = buildNewIssueRecord(input, triage, id, now);
 
   if (issuesStore.length >= MAX_STORE_CAPACITY) {
     issuesStore.pop();
@@ -61,6 +89,12 @@ export async function createIssue(input) {
   return newIssue;
 }
 
+/**
+ * Updates municipal status, priority, or notes on an issue.
+ * @param {string} id - Issue ID
+ * @param {object} updateData - Changes to apply
+ * @returns {object|null} Updated issue or null if not found
+ */
 export function updateIssue(id, updateData) {
   const index = issuesStore.findIndex((issue) => issue.id === id);
   if (index === -1) return null;

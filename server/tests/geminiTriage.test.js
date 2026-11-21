@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { triageIssue } from "../src/services/geminiTriageService.js";
+import { triageIssue, resetTriageCache, setCachedTriage, getCachedTriage } from "../src/services/geminiTriageService.js";
 import { GoogleGenAI } from "@google/genai";
 
 vi.mock("@google/genai", () => {
@@ -12,6 +12,7 @@ function setupActiveKey() {
   const originalKey = process.env.GEMINI_API_KEY;
   beforeEach(() => {
     vi.clearAllMocks();
+    resetTriageCache();
     process.env.GEMINI_API_KEY = "active-test-key";
   });
   afterEach(() => {
@@ -24,6 +25,7 @@ describe("Gemini Triage Without API Key", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    resetTriageCache();
     delete process.env.GEMINI_API_KEY;
   });
 
@@ -96,7 +98,11 @@ describe("Gemini Triage Active Key Fallbacks", () => {
   });
 });
 
-describe("Gemini Triage Error Handling", () => {
+describe("Gemini Triage Error Handling & Caching", () => {
+  beforeEach(() => {
+    resetTriageCache();
+  });
+
   it("falls back to rule engine with diagnostic warning when Gemini throws", async () => {
     process.env.GEMINI_API_KEY = "test-api-key";
     GoogleGenAI.mockImplementation(function () {
@@ -118,5 +124,11 @@ describe("Gemini Triage Error Handling", () => {
     expect(result.category).toBe("Sanitation & Waste");
     expect(stderrSpy).toHaveBeenCalled();
     stderrSpy.mockRestore();
+  });
+
+  it("stores and retrieves cached triage entries", () => {
+    setCachedTriage("p::d::l", { category: "Roads & Transport", priority: "Low" });
+    const hit = getCachedTriage("p::d::l");
+    expect(hit.category).toBe("Roads & Transport");
   });
 });

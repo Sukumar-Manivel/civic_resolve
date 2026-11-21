@@ -5,12 +5,15 @@ import helmet from "helmet";
 import cors from "cors";
 import issuesRoutes from "./routes/issuesRoutes.js";
 import healthRoutes from "./routes/healthRoutes.js";
+import { rateLimiter } from "./middleware/rateLimiter.js";
 
 function configureMiddleware(app) {
   app.use((req, res, next) => {
     res.setHeader("X-Request-Id", crypto.randomUUID());
     next();
   });
+
+  app.use(rateLimiter);
 
   app.use(
     helmet({
@@ -29,7 +32,7 @@ function configureMiddleware(app) {
   app.use(express.json({ limit: "5mb" }));
 
   const clientPath = path.resolve(process.cwd(), "client");
-  app.use(express.static(clientPath));
+  app.use(express.static(clientPath, { maxAge: "1d", etag: true }));
 }
 
 export function handleNotFound(req, res) {
