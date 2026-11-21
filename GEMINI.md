@@ -1,6 +1,6 @@
 # 🛡️ GEMINI Engineering Principles & Strict Quality Rules
 
-This document establishes the mandatory engineering standards, architectural patterns, and quality gates for development within `h2s-100-starter`.
+This document establishes the mandatory engineering standards, architectural patterns, and quality gates for development within `civic-resolve`.
 
 ---
 

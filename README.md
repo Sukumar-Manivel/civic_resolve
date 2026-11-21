@@ -66,8 +66,8 @@
 
 ### Installation & Run
 ```bash
-# Navigate to the starter project
-cd "inter clg challenge/h2s-100-starter"
+# Navigate to the project directory
+cd "civic-resolve"
 
 # Install dependencies
 npm install

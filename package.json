@@ -1,7 +1,7 @@
 {
-  "name": "h2s-100-starter",
+  "name": "civic-resolve",
   "version": "1.0.0",
-  "description": "Hack2Skill 100/100 Automated Quality Starter Template",
+  "description": "CivicResolve - AI-Powered Citizen Grievance Management and Resolution System",
   "main": "server/src/index.js",
   "type": "module",
   "scripts": {
