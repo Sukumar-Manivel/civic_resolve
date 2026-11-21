@@ -2,6 +2,8 @@ import crypto from "node:crypto";
 import { SEED_ISSUES } from "../utils/seedData.js";
 import { triageIssue } from "./geminiTriageService.js";
 
+export const MAX_STORE_CAPACITY = 100;
+
 let issuesStore = SEED_ISSUES.map((issue) => ({ ...issue }));
 
 export function resetStore() {
@@ -52,6 +54,9 @@ export async function createIssue(input) {
     updatedAt: now
   };
 
+  if (issuesStore.length >= MAX_STORE_CAPACITY) {
+    issuesStore.pop();
+  }
   issuesStore.unshift(newIssue);
   return newIssue;
 }

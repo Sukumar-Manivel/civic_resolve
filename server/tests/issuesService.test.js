@@ -5,7 +5,8 @@ import {
   createIssue,
   updateIssue,
   resetStore,
-  matchesFilter
+  matchesFilter,
+  MAX_STORE_CAPACITY
 } from "../src/services/issuesService.js";
 
 describe("Issues Store Retrieval", () => {
@@ -78,5 +79,24 @@ describe("Issues Store Mutation", () => {
     const partial = updateIssue("civic-seed-002", { status: "Resolved" });
     expect(partial.status).toBe("Resolved");
     expect(updateIssue("unknown-id", { status: "Resolved" })).toBeNull();
+  });
+});
+
+describe("Issues Store Bounded Capacity", () => {
+  beforeEach(() => {
+    resetStore();
+  });
+
+  it("enforces MAX_STORE_CAPACITY by evicting oldest item upon overflow", async () => {
+    for (let i = 0; i < MAX_STORE_CAPACITY + 2; i++) {
+      await createIssue({
+        title: `Overflow Issue ${i}`,
+        description: "Test capacity overflow",
+        location: "Location",
+        category: null
+      });
+    }
+    const all = getIssues();
+    expect(all.length).toBe(MAX_STORE_CAPACITY);
   });
 });

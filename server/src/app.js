@@ -1,4 +1,5 @@
 import path from "node:path";
+import crypto from "node:crypto";
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
@@ -6,6 +7,11 @@ import issuesRoutes from "./routes/issuesRoutes.js";
 import healthRoutes from "./routes/healthRoutes.js";
 
 function configureMiddleware(app) {
+  app.use((req, res, next) => {
+    res.setHeader("X-Request-Id", crypto.randomUUID());
+    next();
+  });
+
   app.use(
     helmet({
       contentSecurityPolicy: {
