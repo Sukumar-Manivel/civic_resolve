@@ -1,0 +1,72 @@
+import { DEPARTMENTS } from "./constants.js";
+
+export const SEED_ISSUES = [
+  {
+    id: "civic-seed-001",
+    title: "Severe pothole cluster near Central Market",
+    description: "Deep craters across the intersection causing vehicle damage and traffic gridlock.",
+    location: "Corner of MG Road & 4th Avenue",
+    category: "Roads & Transport",
+    priority: "High",
+    department: DEPARTMENTS.ROADS,
+    status: "In Progress",
+    urgencyReason: "Heavy vehicular traffic route; immediate tire damage and skid hazard for two-wheelers.",
+    estimatedResolutionHours: 24,
+    triageSource: "rule-engine",
+    imageUrl: null,
+    resolutionNotes: "Road inspection complete; asphalt patching crew scheduled for morning shift.",
+    createdAt: "2026-11-20T10:00:00.000Z",
+    updatedAt: "2026-11-20T14:30:00.000Z"
+  },
+  {
+    id: "civic-seed-002",
+    title: "Overflowing commercial garbage dump",
+    description: "Secondary collection bin overflowed for 48 hours, scattering waste into pedestrian walkways.",
+    location: "Sector 9 Commercial Complex, Gate 2",
+    category: "Sanitation & Waste",
+    priority: "Medium",
+    department: DEPARTMENTS.SANITATION,
+    status: "Reported",
+    urgencyReason: "Public health nuisance and stray animal attraction blocking market walkway.",
+    estimatedResolutionHours: 12,
+    triageSource: "rule-engine",
+    imageUrl: null,
+    resolutionNotes: null,
+    createdAt: "2026-11-21T06:15:00.000Z",
+    updatedAt: "2026-11-21T06:15:00.000Z"
+  },
+  {
+    id: "civic-seed-003",
+    title: "Exposed sparking street cable at school crossroad",
+    description: "High voltage street wire sagging and sparking near primary school pedestrian crossing.",
+    location: "Opposite Primary Health Center, Gandhi Nagar",
+    category: "Electrical & Lighting",
+    priority: "Critical",
+    department: DEPARTMENTS.ELECTRICAL,
+    status: "Reported",
+    urgencyReason: "Life-threatening electrocution risk near primary school and public footpath.",
+    estimatedResolutionHours: 6,
+    triageSource: "rule-engine",
+    imageUrl: null,
+    resolutionNotes: null,
+    createdAt: "2026-11-21T07:45:00.000Z",
+    updatedAt: "2026-11-21T07:45:00.000Z"
+  },
+  {
+    id: "civic-seed-004",
+    title: "Drinking water pipeline breach with contamination",
+    description: "Turbid water flow and joint leakage reported across eighteen residential households.",
+    location: "Block C, Green Valley Apartments, 2nd Main",
+    category: "Water & Sewerage",
+    priority: "High",
+    department: DEPARTMENTS.WATER,
+    status: "Resolved",
+    urgencyReason: "Risk of waterborne infections across multiple households.",
+    estimatedResolutionHours: 18,
+    triageSource: "rule-engine",
+    imageUrl: null,
+    resolutionNotes: "Main pipeline joint welded, supply line purged, and post-repair purity tests cleared.",
+    createdAt: "2026-11-19T08:00:00.000Z",
+    updatedAt: "2026-11-20T17:00:00.000Z"
+  }
+];

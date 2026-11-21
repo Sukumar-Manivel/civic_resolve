@@ -1,7 +1,10 @@
+import path from "node:path";
+import { pathToFileURL } from "node:url";
 import { chromium } from "playwright";
 import AxeBuilder from "@axe-core/playwright";
 
-const TARGET_URL = process.env.APP_URL || "http://localhost:8080";
+const defaultUrl = pathToFileURL(path.resolve(process.cwd(), "client/index.html")).href;
+const TARGET_URL = process.env.APP_URL || defaultUrl;
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21aa"];
 
 async function scanPage(page) {
@@ -26,8 +29,9 @@ function reportViolations(violations) {
 async function main() {
   const browser = await chromium.launch({ headless: true });
   try {
-    const page = await browser.newPage();
-    await page.goto(TARGET_URL, { waitUntil: "networkidle" });
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto(TARGET_URL, { waitUntil: "domcontentloaded" });
     const violations = await scanPage(page);
     reportViolations(violations);
   } catch (err) {

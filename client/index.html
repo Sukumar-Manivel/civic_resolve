@@ -3,21 +3,146 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hack2Skill 100/100 Starter Template</title>
+  <meta name="description" content="AI-Powered Citizen Grievance Management and Resolution Portal">
+  <title>CivicResolve — Citizen Grievance Portal</title>
+  <link rel="stylesheet" href="./src/styles.css">
 </head>
 <body>
-  <header>
-    <h1>Hack2Skill 100/100 Starter Template</h1>
+  <header class="site-header" role="banner">
+    <div class="header-container">
+      <div class="brand-wrapper">
+        <div class="brand-icon" aria-hidden="true">🏛️</div>
+        <div>
+          <h1 class="brand-title">CivicResolve</h1>
+          <p class="brand-subtitle">AI-Powered Citizen Grievance Redressal System</p>
+        </div>
+      </div>
+      <nav class="nav-tabs" aria-label="Portal Navigation" role="tablist">
+        <button type="button" class="tab-btn active" id="tab-citizen" aria-selected="true" role="tab" aria-controls="view-citizen">
+          Citizen Portal
+        </button>
+        <button type="button" class="tab-btn" id="tab-admin" aria-selected="false" role="tab" aria-controls="view-admin">
+          Admin Console
+        </button>
+      </nav>
+    </div>
   </header>
-  <main>
-    <section aria-labelledby="status-heading">
-      <h2 id="status-heading">System Status</h2>
-      <p id="system-status">Operational and Ready</p>
-    </section>
+
+  <div class="stats-bar" aria-label="System Metrics">
+    <div class="stats-container">
+      <span class="stat-item">Total Issues: <strong id="stat-total">0</strong></span>
+      <span class="stat-item">Pending Triage: <strong id="stat-reported">0</strong></span>
+      <span class="stat-item">Under Redressal: <strong id="stat-progress">0</strong></span>
+      <span class="stat-item">Resolved: <strong id="stat-resolved">0</strong></span>
+    </div>
+  </div>
+
+  <main class="main-content" id="main-content">
+    <div id="aria-live-feedback" aria-live="polite" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;"></div>
+
+    <!-- VIEW: CITIZEN PORTAL -->
+    <div id="view-citizen" class="portal-grid" role="tabpanel" aria-labelledby="tab-citizen">
+      <!-- Section 1: Report Issue Form -->
+      <section class="card" aria-labelledby="form-heading">
+        <form id="issue-form" novalidate>
+          <fieldset class="fieldset-custom">
+            <legend class="legend-custom" id="form-heading">📢 Report a Grievance</legend>
+
+            <div class="form-group">
+              <label for="input-title" class="form-label">Issue Title *</label>
+              <input type="text" id="input-title" class="form-input" placeholder="e.g. Broken streetlight on 4th Main" required minlength="3" maxlength="100">
+            </div>
+
+            <div class="form-group">
+              <label for="input-category" class="form-label">Category</label>
+              <select id="input-category" class="form-select">
+                <option value="Auto-Detect">✨ AI Auto-Detect Category</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="input-location" class="form-label">Location / Landmark *</label>
+              <input type="text" id="input-location" class="form-input" placeholder="e.g. Near Government Primary School, Sector 4" required minlength="3" maxlength="120">
+            </div>
+
+            <div class="form-group">
+              <label for="input-description" class="form-label">Detailed Description *</label>
+              <textarea id="input-description" class="form-textarea" placeholder="Describe the severity, duration, and safety hazards..." required minlength="5" maxlength="1000"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="input-image" class="form-label">Attach Photo (Optional, PNG/JPG &lt; 2MB)</label>
+              <input type="file" id="input-image" class="form-input" accept="image/png,image/jpeg,image/webp">
+              <div id="image-preview-container" class="file-preview" style="display: none;">
+                <img id="preview-thumbnail" class="preview-img" alt="Uploaded grievance attachment preview">
+                <button type="button" id="btn-remove-image" class="btn-secondary-sm">Remove</button>
+              </div>
+            </div>
+
+            <button type="submit" id="btn-submit-issue" class="btn-submit">Submit Grievance</button>
+
+            <div id="form-feedback" class="feedback-banner" role="status" aria-atomic="true"></div>
+          </fieldset>
+        </form>
+      </section>
+
+      <!-- Section 2: Citizen Issue Tracker -->
+      <section class="card" aria-labelledby="tracker-heading">
+        <h2 class="card-title" id="tracker-heading">📋 Community Grievance Tracker</h2>
+
+        <div class="filter-toolbar">
+          <label for="tracker-search" class="form-label" style="display:none;">Search complaints</label>
+          <input type="search" id="tracker-search" class="form-input search-input" placeholder="Search by title, location, or keyword..." aria-label="Search complaints">
+
+          <label for="tracker-category" class="form-label" style="display:none;">Filter by Category</label>
+          <select id="tracker-category" class="form-select" style="max-width: 200px;" aria-label="Filter by Category">
+            <option value="">All Categories</option>
+          </select>
+
+          <div class="status-pills" role="radiogroup" aria-label="Filter by Status">
+            <button type="button" class="pill-btn active" data-status="" role="radio" aria-checked="true">All</button>
+            <button type="button" class="pill-btn" data-status="Reported" role="radio" aria-checked="false">Reported</button>
+            <button type="button" class="pill-btn" data-status="In Progress" role="radio" aria-checked="false">In Progress</button>
+            <button type="button" class="pill-btn" data-status="Resolved" role="radio" aria-checked="false">Resolved</button>
+          </div>
+        </div>
+
+        <div id="issues-container" class="issues-grid">
+          <div class="empty-state">Loading civic grievances...</div>
+        </div>
+      </section>
+    </div>
+
+    <!-- VIEW: ADMIN CONSOLE -->
+    <div id="view-admin" class="admin-section" role="tabpanel" aria-labelledby="tab-admin">
+      <section class="card" aria-labelledby="admin-heading">
+        <h2 class="card-title" id="admin-heading">🛠️ Municipal Redressal & Dispatch Console</h2>
+        <p class="issue-desc">Manage complaint workflows, transition statuses, reassign departments, and record field resolution logs.</p>
+
+        <div id="admin-table-wrapper" class="admin-table-container">
+          <table class="admin-table" aria-label="Municipal Complaints Table">
+            <thead>
+              <tr>
+                <th scope="col">ID & Title</th>
+                <th scope="col">Category & Dept</th>
+                <th scope="col">Priority</th>
+                <th scope="col">Status Action</th>
+                <th scope="col">Resolution Notes</th>
+              </tr>
+            </thead>
+            <tbody id="admin-tbody">
+              <tr><td colspan="5" class="empty-state">No complaints to manage.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
   </main>
-  <footer>
-    <p>&copy; 2026 Hack2Skill Starter Template. All rights reserved.</p>
+
+  <footer class="site-footer" role="contentinfo">
+    <p>CivicResolve &copy; 2026 — Verified Open Municipal Intelligence & Citizen Redressal.</p>
   </footer>
-  <script type="module" src="/src/main.js"></script>
+
+  <script type="module" src="./src/main.js"></script>
 </body>
 </html>
