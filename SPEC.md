@@ -40,7 +40,7 @@ interface Issue {
   urgencyReason: string;               // 1-2 sentence rationale for priority
   estimatedResolutionHours: number;    // Estimated resolution SLA hours
   triageSource: "gemini" | "rule-engine"; // Engine responsible for classification
-  imageUrl?: string | null;            // Validated base64 data URI (max 2MB)
+  imageUrl?: string | null;            // Validated base64 data URI (max 512KB)
   resolutionNotes?: string | null;     // Official resolution remarks
   createdAt: string;                   // ISO 8601 UTC timestamp
   updatedAt: string;                   // ISO 8601 UTC timestamp

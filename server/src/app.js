@@ -7,6 +7,10 @@ import compression from "compression";
 import issuesRoutes from "./routes/issuesRoutes.js";
 import healthRoutes from "./routes/healthRoutes.js";
 
+/**
+ * Attaches enterprise security, compression, and parser middleware to Express app.
+ * @param {import("express").Express} app
+ */
 function configureMiddleware(app) {
   app.use((req, res, next) => {
     res.setHeader("X-Request-Id", crypto.randomUUID());
@@ -35,10 +39,22 @@ function configureMiddleware(app) {
   app.use(express.static(clientPath, { maxAge: "1d", etag: true }));
 }
 
+/**
+ * Fallback handler for unmapped routes.
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ */
 export function handleNotFound(req, res) {
   return res.status(404).json({ error: `Cannot ${req.method} ${req.path}` });
 }
 
+/**
+ * Global unhandled error boundary middleware.
+ * @param {Error} err
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ */
 export function handleErrors(err, req, res, next) {
   if (res.headersSent) {
     return next(err);
@@ -47,6 +63,10 @@ export function handleErrors(err, req, res, next) {
   return res.status(500).json({ error: "Internal server error" });
 }
 
+/**
+ * Factory creating configured Express instance.
+ * @returns {import("express").Express}
+ */
 export function createApp() {
   const app = express();
 

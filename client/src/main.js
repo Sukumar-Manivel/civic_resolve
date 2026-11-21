@@ -430,17 +430,31 @@ function setupFilters() {
   }
 }
 
+/**
+ * Escapes quotes and wraps CSV values in quotation marks.
+ * @param {string|number} val - Target field value
+ * @returns {string} Escaped CSV cell string
+ */
 function formatCsvField(val) {
   const str = String(val || "").replace(/"/g, '""');
   return `"${str}"`;
 }
 
+/**
+ * Builds CSV string from grievance data array.
+ * @param {Array<object>} data - Issue records
+ * @returns {string} Formatted CSV table
+ */
 function buildCsvContent(data) {
   const headers = ["id", "title", "category", "priority", "department", "status", "location", "createdAt"];
   const rows = data.map((i) => headers.map((h) => formatCsvField(i[h])).join(","));
   return [headers.join(","), ...rows].join("\n");
 }
 
+/**
+ * Exports grievance dataset as downloadable JSON or CSV file.
+ * @param {"json"|"csv"} format - Export format
+ */
 function exportDataAs(format) {
   if (!issuesData || issuesData.length === 0) return;
   const isJson = format === "json";
@@ -456,6 +470,9 @@ function exportDataAs(format) {
   announce(`Exported grievances as ${format.toUpperCase()}`);
 }
 
+/**
+ * Main application bootstrapper attaching DOM event listeners.
+ */
 function init() {
   populateCategoryDropdowns();
   setupTabs();

@@ -1,5 +1,10 @@
 import { createApp } from "./app.js";
 
+/**
+ * Starts HTTP server on configured port.
+ * @param {number|string} port - Listen port
+ * @returns {import("node:http").Server} Running server instance
+ */
 export function startServer(port) {
   const app = createApp();
   return app.listen(port, () => {

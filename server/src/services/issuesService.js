@@ -78,6 +78,14 @@ export function getIssueById(id) {
   return issuesStore.get(id) || null;
 }
 
+/**
+ * Assembles a standardized issue record from citizen input and AI triage.
+ * @param {object} input - Input grievance payload
+ * @param {object} triage - AI triage classification
+ * @param {string} id - Unique issue identifier
+ * @param {string} now - ISO 8601 timestamp
+ * @returns {object} Assembled issue record
+ */
 function buildNewIssueRecord(input, triage, id, now) {
   return {
     id,
