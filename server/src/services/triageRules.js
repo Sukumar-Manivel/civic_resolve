@@ -23,6 +23,11 @@ const CATEGORY_KEYWORDS = [
   }
 ];
 
+/**
+ * Detects grievance category from combined textual terms.
+ * @param {string} combinedText - Joined title and description
+ * @returns {string} Detected category name
+ */
 export function detectCategory(combinedText) {
   const lower = combinedText.toLowerCase();
   for (const item of CATEGORY_KEYWORDS) {
@@ -33,6 +38,11 @@ export function detectCategory(combinedText) {
   return "General Administration";
 }
 
+/**
+ * Maps a category name to its responsible municipal department.
+ * @param {string} category - Issue category
+ * @returns {string} Assigned municipal authority
+ */
 export function mapCategoryToDepartment(category) {
   const map = {
     "Sanitation & Waste": DEPARTMENTS.SANITATION,
@@ -44,6 +54,12 @@ export function mapCategoryToDepartment(category) {
   return map[category] || DEPARTMENTS.GENERAL;
 }
 
+/**
+ * Evaluates public hazard severity and estimated turnaround hours.
+ * @param {string} category - Issue category
+ * @param {string} combinedText - Joined text
+ * @returns {{ priority: string, hours: number, reason: string }}
+ */
 export function evaluatePriority(category, combinedText) {
   const lower = combinedText.toLowerCase();
   const criticalCues = ["spark", "shock", "live wire", "electrocution", "collapse", "poison", "fire"];
@@ -59,6 +75,11 @@ export function evaluatePriority(category, combinedText) {
   return { priority: "Low", hours: 72, reason: "Non-critical civic maintenance request." };
 }
 
+/**
+ * Classifies an issue deterministically when external AI is offline.
+ * @param {object} issue - { title, description, category }
+ * @returns {object} Triage result with SLA and department
+ */
 export function classifyIssueWithRules({ title, description, category }) {
   const combined = `${title} ${description}`;
   const resolvedCategory = category && ISSUE_CATEGORIES.includes(category)

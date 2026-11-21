@@ -14,9 +14,23 @@
     "demo": "node scripts/record-demo.js",
     "gate": "npm run lint && npm run dup && npm run sec && npm run test:cov"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "civic-tech",
+    "gemini",
+    "citizen-grievance",
+    "smart-city",
+    "hack2skill",
+    "promptwars"
+  ],
+  "author": "Sukumar Manivel <24z266@psgitech.ac.in>",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sukumar-Manivel/civic_resolve.git"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "dependencies": {
     "@google/genai": "^3.4.0",
     "compression": "^1.8.2",
