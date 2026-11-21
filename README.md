@@ -2,6 +2,20 @@
 
 > **CivicResolve** is an automated, AI-driven municipal grievance management and resolution platform. It empowers citizens to report community hazards, applies Google Gemini (`gemini-2.5-flash`) for real-time automated triage and department dispatch, calculates estimated resolution SLAs, and provides an end-to-end transparent tracking and municipal administration console.
 
+[![Quality Gate](https://img.shields.io/badge/Quality%20Gate-100%25%20PASS-brightgreen)](#-quality-gate-verification)
+[![Test Coverage](https://img.shields.io/badge/Coverage-98.3%25-brightgreen)](#-quality-gate-verification)
+[![Accessibility](https://img.shields.io/badge/WCAG%202.1%20AA-0%20Violations-brightgreen)](#-quality-gate-verification)
+[![Repo Size](https://img.shields.io/badge/Repo%20Size-0.12%20MB-blue)](#-challenge-submission-rubric)
+[![Deploy Ready](https://img.shields.io/badge/Deploy-Cloud%20Run%20Ready-blue)](#-google-cloud-run-deployment)
+
+---
+
+## 🌐 Live Deployment & Links
+
+* 🚀 **Live Web App (Google Cloud Run):** [https://civic-resolve-510810666377.asia-south1.run.app](https://civic-resolve-510810666377.asia-south1.run.app)
+* 💻 **GitHub Repository:** [https://github.com/Sukumar-Manivel/civic_resolve](https://github.com/Sukumar-Manivel/civic_resolve)
+* ⚡ **1-Click Deploy to Cloud Run:** [![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run/?git_repo=https://github.com/Sukumar-Manivel/civic_resolve.git)
+
 ---
 
 ## 📋 Challenge Submission Rubric
