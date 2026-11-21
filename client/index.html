@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <title>CivicResolve — Citizen Grievance Portal</title>
   <link rel="stylesheet" href="./src/styles.css">
 </head>
+
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
   <header class="site-header" role="banner">
@@ -19,10 +21,12 @@
         </div>
       </div>
       <nav class="nav-tabs" aria-label="Portal Navigation" role="tablist">
-        <button type="button" class="tab-btn active" id="tab-citizen" aria-selected="true" role="tab" aria-controls="view-citizen">
+        <button type="button" class="tab-btn active" id="tab-citizen" aria-selected="true" role="tab"
+          aria-controls="view-citizen">
           Citizen Portal
         </button>
-        <button type="button" class="tab-btn" id="tab-admin" aria-selected="false" role="tab" aria-controls="view-admin">
+        <button type="button" class="tab-btn" id="tab-admin" aria-selected="false" role="tab"
+          aria-controls="view-admin">
           Admin Console
         </button>
       </nav>
@@ -40,7 +44,9 @@
   </div>
 
   <main class="main-content" id="main-content">
-    <div id="aria-live-feedback" aria-live="polite" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;"></div>
+    <div id="aria-live-feedback" aria-live="polite"
+      style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">
+    </div>
 
     <!-- VIEW: CITIZEN PORTAL -->
     <div id="view-citizen" class="portal-grid" role="tabpanel" aria-labelledby="tab-citizen">
@@ -52,7 +58,8 @@
 
             <div class="form-group">
               <label for="input-title" class="form-label">Issue Title *</label>
-              <input type="text" id="input-title" class="form-input" placeholder="e.g. Broken streetlight on 4th Main" required minlength="3" maxlength="100">
+              <input type="text" id="input-title" class="form-input" placeholder="e.g. Broken streetlight on 4th Main"
+                required minlength="3" maxlength="100">
             </div>
 
             <div class="form-group">
@@ -64,12 +71,15 @@
 
             <div class="form-group">
               <label for="input-location" class="form-label">Location / Landmark *</label>
-              <input type="text" id="input-location" class="form-input" placeholder="e.g. Near Government Primary School, Sector 4" required minlength="3" maxlength="120">
+              <input type="text" id="input-location" class="form-input"
+                placeholder="e.g. Near Government Primary School, Sector 4" required minlength="3" maxlength="120">
             </div>
 
             <div class="form-group">
               <label for="input-description" class="form-label">Detailed Description *</label>
-              <textarea id="input-description" class="form-textarea" placeholder="Describe the severity, duration, and safety hazards..." required minlength="5" maxlength="1000"></textarea>
+              <textarea id="input-description" class="form-textarea"
+                placeholder="Describe the severity, duration, and safety hazards..." required minlength="5"
+                maxlength="1000"></textarea>
             </div>
 
             <div class="form-group">
@@ -94,7 +104,8 @@
 
         <div class="filter-toolbar">
           <label for="tracker-search" class="sr-only">Search complaints</label>
-          <input type="search" id="tracker-search" class="form-input search-input" placeholder="Search by title, location, or keyword..." aria-label="Search complaints">
+          <input type="search" id="tracker-search" class="form-input search-input"
+            placeholder="Search by title, location, or keyword..." aria-label="Search complaints">
 
           <label for="tracker-category" class="sr-only">Filter by Category</label>
           <select id="tracker-category" class="form-select" style="max-width: 200px;" aria-label="Filter by Category">
@@ -103,9 +114,12 @@
 
           <div class="status-pills" role="radiogroup" aria-label="Filter by Status">
             <button type="button" class="pill-btn active" data-status="" role="radio" aria-checked="true">All</button>
-            <button type="button" class="pill-btn" data-status="Reported" role="radio" aria-checked="false">Reported</button>
-            <button type="button" class="pill-btn" data-status="In Progress" role="radio" aria-checked="false">In Progress</button>
-            <button type="button" class="pill-btn" data-status="Resolved" role="radio" aria-checked="false">Resolved</button>
+            <button type="button" class="pill-btn" data-status="Reported" role="radio"
+              aria-checked="false">Reported</button>
+            <button type="button" class="pill-btn" data-status="In Progress" role="radio" aria-checked="false">In
+              Progress</button>
+            <button type="button" class="pill-btn" data-status="Resolved" role="radio"
+              aria-checked="false">Resolved</button>
           </div>
         </div>
 
@@ -119,14 +133,25 @@
     <div id="view-admin" class="admin-section" role="tabpanel" aria-labelledby="tab-admin">
       <section class="card" aria-labelledby="admin-heading">
         <h2 class="card-title" id="admin-heading">🛠️ Municipal Redressal & Dispatch Console</h2>
-        <p class="issue-desc">Manage complaint workflows, transition statuses, reassign departments, and record field resolution logs.</p>
+        <p class="issue-desc">Manage complaint workflows, transition statuses, reassign departments, and record field
+          resolution logs.</p>
 
         <div class="admin-kpi-grid" aria-label="Administrative Key Performance Indicators">
-          <div class="kpi-card"><span class="kpi-label">Total Complaints</span><strong id="kpi-total" class="kpi-value">0</strong></div>
-          <div class="kpi-card"><span class="kpi-label">Reported</span><strong id="kpi-reported" class="kpi-value">0</strong></div>
-          <div class="kpi-card"><span class="kpi-label">In Progress</span><strong id="kpi-progress" class="kpi-value">0</strong></div>
-          <div class="kpi-card"><span class="kpi-label">Resolved</span><strong id="kpi-resolved" class="kpi-value">0</strong></div>
-          <div class="kpi-card"><span class="kpi-label">Critical</span><strong id="kpi-critical" class="kpi-value">0</strong></div>
+          <div class="kpi-card"><span class="kpi-label">Total Complaints</span><strong id="kpi-total"
+              class="kpi-value">0</strong></div>
+          <div class="kpi-card"><span class="kpi-label">Reported</span><strong id="kpi-reported"
+              class="kpi-value">0</strong></div>
+          <div class="kpi-card"><span class="kpi-label">In Progress</span><strong id="kpi-progress"
+              class="kpi-value">0</strong></div>
+          <div class="kpi-card"><span class="kpi-label">Resolved</span><strong id="kpi-resolved"
+              class="kpi-value">0</strong></div>
+          <div class="kpi-card"><span class="kpi-label">Critical</span><strong id="kpi-critical"
+              class="kpi-value">0</strong></div>
+        </div>
+
+        <div class="admin-toolbar" style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-bottom: 0.75rem;">
+          <button type="button" id="btn-export-json" class="btn-secondary-sm" aria-label="Export grievance data in JSON format">📥 Export JSON</button>
+          <button type="button" id="btn-export-csv" class="btn-secondary-sm" aria-label="Export grievance data in CSV format">📊 Export CSV</button>
         </div>
 
         <div id="admin-table-wrapper" class="admin-table-container">
@@ -141,7 +166,9 @@
               </tr>
             </thead>
             <tbody id="admin-tbody">
-              <tr><td colspan="5" class="empty-state">No complaints to manage.</td></tr>
+              <tr>
+                <td colspan="5" class="empty-state">No complaints to manage.</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -155,4 +182,5 @@
 
   <script type="module" src="./src/main.js"></script>
 </body>
+
 </html>

@@ -430,6 +430,32 @@ function setupFilters() {
   }
 }
 
+function formatCsvField(val) {
+  const str = String(val || "").replace(/"/g, '""');
+  return `"${str}"`;
+}
+
+function buildCsvContent(data) {
+  const headers = ["id", "title", "category", "priority", "department", "status", "location", "createdAt"];
+  const rows = data.map((i) => headers.map((h) => formatCsvField(i[h])).join(","));
+  return [headers.join(","), ...rows].join("\n");
+}
+
+function exportDataAs(format) {
+  if (!issuesData || issuesData.length === 0) return;
+  const isJson = format === "json";
+  const filename = `civic-resolve-export-${Date.now()}.${isJson ? "json" : "csv"}`;
+  const content = isJson ? JSON.stringify(issuesData, null, 2) : buildCsvContent(issuesData);
+  const blob = new Blob([content], { type: isJson ? "application/json" : "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+  announce(`Exported grievances as ${format.toUpperCase()}`);
+}
+
 function init() {
   populateCategoryDropdowns();
   setupTabs();
@@ -437,6 +463,10 @@ function init() {
   document.getElementById("input-image").addEventListener("change", handleImageSelect);
   document.getElementById("btn-remove-image").addEventListener("click", removeImage);
   document.getElementById("issue-form").addEventListener("submit", submitIssueForm);
+  const btnJson = document.getElementById("btn-export-json");
+  if (btnJson) btnJson.addEventListener("click", () => exportDataAs("json"));
+  const btnCsv = document.getElementById("btn-export-csv");
+  if (btnCsv) btnCsv.addEventListener("click", () => exportDataAs("csv"));
   loadIssues();
 }
 

@@ -3,9 +3,10 @@
 > **CivicResolve** is an automated, AI-driven municipal grievance management and resolution platform. It empowers citizens to report community hazards, applies Google Gemini (`gemini-2.5-flash`) for real-time automated triage and department dispatch, calculates estimated resolution SLAs, and provides an end-to-end transparent tracking and municipal administration console.
 
 [![Quality Gate](https://img.shields.io/badge/Quality%20Gate-100%25%20PASS-brightgreen)](#-quality-gate-verification)
-[![Test Coverage](https://img.shields.io/badge/Coverage-98.3%25-brightgreen)](#-quality-gate-verification)
+[![Test Coverage](https://img.shields.io/badge/Coverage-97.5%25-brightgreen)](#-quality-gate-verification)
 [![Accessibility](https://img.shields.io/badge/WCAG%202.1%20AA-0%20Violations-brightgreen)](#-quality-gate-verification)
-[![Repo Size](https://img.shields.io/badge/Repo%20Size-0.12%20MB-blue)](#-challenge-submission-rubric)
+[![Tests Passing](https://img.shields.io/badge/Tests-45%2F45%20Passed-brightgreen)](#-quality-gate-verification)
+[![Efficiency](https://img.shields.io/badge/Efficiency-O(1)%20Map%20Store-brightgreen)](#-efficiency--high-performance-engineering)
 [![Deploy Ready](https://img.shields.io/badge/Deploy-Cloud%20Run%20Ready-blue)](#-google-cloud-run-deployment)
 
 ---
@@ -85,7 +86,7 @@ Following modern software engineering principles (as advocated by Dave Farley an
 | **Sliding Rate Limiter** | Per-IP in-memory sliding window limiter (HTTP 429) | Prevents denial of service and municipal abuse while ensuring legitimate citizens receive instant processing. |
 | **Zero-Framework Client** | Native ES modules + DOM API (`textContent`) | Frameworks introduce massive bundle size and hydration overhead. Native DOM construction eliminates 100% of XSS attack vectors (`zero innerHTML / eval`) while achieving instantaneous First Contentful Paint (<20ms). |
 | **Isolated 400 Validation** | Dedicated `validateRequest.js` middleware before controllers | Never let untrusted payload touch business services. Fail-fast at transport boundary with comprehensive schema diagnostics. |
-| **Behavior Validated by Evidence** | 37 automated tests with 100% line coverage and error path testing | Trusting software because behavior is verified via evidence (unit, failure modes, timeouts, malformed inputs), not because of authorship. |
+| **Behavior Validated by Evidence** | 45 automated tests across 7 suites with 97.5% coverage and error path testing | Trusting software because behavior is verified via evidence (unit, failure modes, timeouts, malformed inputs), not because of authorship. |
 | **Executable Habit Hooks** | Pre-configured quality gates (`complexity <= 8`, `lines <= 35`, `dup = 0%`, `WCAG 2.1 AA`) | Quality is not a last-minute checkpoint; it is continuously enforced via automated guardrails on every build. |
 
 ---
@@ -166,7 +167,7 @@ All verification gates pass with a **100% score**:
 | **Linting** | ESLint Flat Config | Complexity <= 8, Max Lines/Fn <= 35, Depth <= 3 | **0 Errors, 0 Warnings** |
 | **Duplication** | jscpd | Zero cloned tokens across client & server | **0.00% Duplication** |
 | **Security** | AST Scanner + npm audit | No API keys, no eval/innerHTML, no high CVEs, rate limiting | **0 Violations, 0 Vulnerabilities** |
-| **Test Coverage** | Vitest (v8 Provider) | >95% Lines/Stmts/Funcs, >90% Branches | **98.3% Stmts, 97.4% Branch, 100% Funcs** |
+| **Test Coverage** | Vitest (v8 Provider) | >95% Lines/Stmts/Funcs, >90% Branches | **45/45 Passed (97.5% Stmts, 93.3% Branch, 97.9% Funcs, 97.7% Lines)** |
 | **Accessibility** | Axe Core (Playwright) | WCAG 2.1 AA (`wcag2a`, `wcag2aa`, `wcag21aa`) | **0 Violations (100% Compliant)** |
 
 ---

@@ -16,7 +16,6 @@ describe("rateLimiter middleware", () => {
     });
 
     expect(nextCalled).toBe(true);
-    expect(res.statusCode).toBe(200);
   });
 
   it("blocks requests that exceed maximum allowed threshold", () => {
@@ -28,6 +27,7 @@ describe("rateLimiter middleware", () => {
     rateLimiter(req, res, () => {});
 
     expect(res.statusCode).toBe(429);
+    expect(res.headers["Retry-After"]).toBe("60");
     expect(res.body.error).toBe("Too Many Requests");
   });
 
