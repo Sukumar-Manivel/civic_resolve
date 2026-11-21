@@ -7,7 +7,7 @@
 ## 📋 Challenge Submission Rubric
 
 ### 1. Chosen Vertical
-* **Vertical:** `[Challenge 6] AI-Powered Citizen Grievance Management and Resolution`
+* **Vertical:** `CivicResolve: AI-Powered Citizen Grievance Management and Resolution (PromptWars x GDG on-Campus PSG iTech)`
 * **Focus Area:** Real-time civic issue intake, automated multi-department triage (Roads, Sanitation, Water, Electrical, Public Safety), deterministic fallback classification, SLA turnaround prediction, and transparent lifecycle tracking from `Reported` to `Resolved`.
 
 ### 2. Approach and Logic
@@ -47,6 +47,17 @@ Following modern software engineering principles (as advocated by Dave Farley an
 
 ---
 
+## 🔌 REST API Reference
+
+| Endpoint | Method | Description | Request Body / Query | Success Response | Error Codes |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `/api/health` | `GET` | Service readiness & active complaints count | None | `200 OK` (`{ status, timestamp, service, issuesCount }`) | `500` |
+| `/api/issues` | `GET` | List complaints with optional query filters | Query: `?status=Reported&category=Roads&search=MG` | `200 OK` (`{ count, data: Issue[] }`) | `500` |
+| `/api/issues` | `POST` | Submit complaint with automated AI triage | JSON: `{ title, description, location, category?, image? }` | `201 Created` (`Issue` object with AI triage fields) | `400` (Validation failed) |
+| `/api/issues/:id/status` | `PATCH` | Update complaint status, priority & notes | JSON: `{ status?, priority?, department?, resolutionNotes? }` | `200 OK` (Updated `Issue` object) | `400` (Invalid enum), `404` (Not found) |
+
+---
+
 ## 🏗️ Architecture & Data Flow
 
 ```
@@ -73,23 +84,31 @@ Following modern software engineering principles (as advocated by Dave Farley an
 
 ---
 
-## 🚀 Local Setup & Development
+## 🚀 Local Setup & Configuration
 
 ### Prerequisites
 * Node.js v18+ (tested on Node v20/v24)
 * npm v9+
 
+### Environment Configuration
+CivicResolve supports optional live Google Gemini AI triage via `GEMINI_API_KEY`.
+* **With Gemini Key:** Live LLM classification and SLA estimation via `gemini-2.5-flash`.
+* **Without Gemini Key (or on network timeout):** System automatically falls back to deterministic rule-based triage (`triageRules.js`), logging a diagnostic warning without interrupting service.
+
+```bash
+# Optional: Set Gemini API Key (or leave unset to use deterministic fallback)
+export GEMINI_API_KEY="your-gemini-api-key"
+```
+
 ### Installation & Run
 ```bash
-# Navigate to the project directory
-cd "civic-resolve"
-
-# Install dependencies
 npm install
+```
 
-# Start development server
+```bash
 npm start
 ```
+
 The application will be live at `http://localhost:8080`.
 
 ---
@@ -99,20 +118,27 @@ The application will be live at `http://localhost:8080`.
 All quality gates enforce a zero-defect baseline:
 
 ```bash
-# 1. Linting & Code Metrics (complexity <= 8, max-lines <= 35, max-depth <= 3)
 npm run lint
+```
 
-# 2. Code Duplication Check (threshold: 0% duplication)
+```bash
 npm run dup
+```
 
-# 3. AST Security Scanner (zero eval, zero innerHTML, zero exposed keys)
+```bash
 node scripts/security-check.js
+```
 
-# 4. Vitest Unit & Integration Test Coverage (>95% coverage)
+```bash
 npm run test:cov
+```
 
-# 5. Accessibility Scan (WCAG 2.1 AA via Playwright + Axe)
+```bash
 npm run a11y
+```
+
+```bash
+npm run gate
 ```
 
 ---
@@ -122,10 +148,7 @@ npm run a11y
 Deploy containerized CivicResolve to Google Cloud Run in the `asia-south1` region:
 
 ```bash
-gcloud run deploy civic-resolve \
-  --source . \
-  --region asia-south1 \
-  --platform managed \
-  --allow-unauthenticated \
-  --set-env-vars "NODE_ENV=production,PORT=8080"
+gcloud run deploy civic-resolve --source . --region asia-south1 --platform managed --allow-unauthenticated --set-env-vars "NODE_ENV=production,PORT=8080,GEMINI_API_KEY="
 ```
+
+*(Note: Replace `GEMINI_API_KEY=` with your API key if enabled; if omitted or blank, the deterministic rule engine automatically provides 100% offline triage fallback).*
