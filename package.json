@@ -11,6 +11,7 @@
     "sec": "node scripts/security-check.js && npm audit --audit-level=high",
     "test:cov": "vitest run --coverage",
     "a11y": "node scripts/a11y-check.js",
+    "benchmark": "node scripts/benchmark.js",
     "demo": "node scripts/record-demo.js",
     "gate": "npm run lint && npm run dup && npm run sec && npm run test:cov"
   },
