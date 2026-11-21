@@ -4,6 +4,7 @@ import path from "node:path";
 const EXCLUDE_DIRS = new Set(["node_modules", "coverage", ".git", ".agents"]);
 const DANGEROUS_PATTERNS = [
   { name: "Google API Key", regex: /AIza[0-9A-Za-z-_]{35}/ },
+  { name: "Gemini API Token", regex: /AQ\.[0-9A-Za-z-_]{40,}/ },
   { name: "eval() usage", regex: /\beval\s*\(/ },
   { name: "innerHTML assignment", regex: /\.innerHTML\s*=/ }
 ];

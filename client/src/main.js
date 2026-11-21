@@ -153,7 +153,7 @@ function buildIssueCard(issue) {
 
 function renderIssues(issues) {
   const container = document.getElementById("issues-container");
-  container.textContent = "";
+  container.replaceChildren();
 
   if (issues.length === 0) {
     const empty = document.createElement("div");
@@ -224,7 +224,7 @@ function buildAdminRow(issue) {
 
 function renderAdminTable(issues) {
   const tbody = document.getElementById("admin-tbody");
-  tbody.textContent = "";
+  tbody.replaceChildren();
 
   if (issues.length === 0) {
     const tr = document.createElement("tr");
@@ -277,7 +277,7 @@ async function loadIssues() {
     renderAdminTable(issuesData);
   } catch (err) {
     const container = document.getElementById("issues-container");
-    container.textContent = "";
+    container.replaceChildren();
     const errBox = document.createElement("div");
     errBox.className = "empty-state";
     errBox.textContent = `Error loading complaints: ${err.message}`;
