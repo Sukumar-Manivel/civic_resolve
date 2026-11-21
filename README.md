@@ -207,7 +207,7 @@ npm run gate
 Deploy containerized CivicResolve to Google Cloud Run in the `asia-south1` region:
 
 ```bash
-gcloud run deploy civic-resolve --source . --region asia-south1 --platform managed --allow-unauthenticated --set-env-vars "NODE_ENV=production,PORT=8080,GEMINI_API_KEY="
+gcloud run deploy civic-resolve --source . --region asia-south1 --platform managed --allow-unauthenticated --port 8080 --set-env-vars "NODE_ENV=production,GEMINI_API_KEY="
 ```
 
 *(Note: Replace `GEMINI_API_KEY=` with your API key if enabled; if omitted or blank, the deterministic rule engine automatically provides 100% offline triage fallback).*
