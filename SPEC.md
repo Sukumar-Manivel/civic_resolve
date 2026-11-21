@@ -95,9 +95,16 @@ When `GEMINI_API_KEY` is missing or when the API times out / fails:
   - `status`: Filter by `Reported`, `In Progress`, or `Resolved`.
   - `category`: Filter by standard category string.
   - `search`: Case-insensitive substring search in `title`, `description`, `location`.
-* **Response `200 OK`:** Array of `Issue` objects sorted by `createdAt` descending.
+  - `limit`: Number of issues to return (default: 50, max: 100).
+  - `offset`: Pagination offset index (default: 0).
+* **Response `200 OK`:** Array of `Issue` summary objects (`hasImage: boolean`, without full image bloat) sorted by `createdAt` descending.
 
-### 3. `POST /api/issues`
+### 3. `GET /api/issues/:id`
+* **URL Parameter:** `id` — Issue unique identifier.
+* **Response `200 OK`:** Full `Issue` object including base64 `imageUrl` payload.
+* **Error `404 Not Found`:** `{ "error": "Issue with ID '...' not found" }`
+
+### 4. `POST /api/issues`
 * **Request Body:**
   ```json
   {
@@ -112,10 +119,10 @@ When `GEMINI_API_KEY` is missing or when the API times out / fails:
   - Null or non-object body.
   - Missing/empty or non-string `title`, `description`, `location`.
   - Invalid category (if provided).
-  - Invalid image format or size $> 2\text{MB}$.
+  - Invalid image format or size $> 512\text{KB}$.
 * **Response `201 Created`:** Newly created `Issue` with AI triage fields populated.
 
-### 4. `PATCH /api/issues/:id/status`
+### 5. `PATCH /api/issues/:id/status`
 * **Request Body:**
   ```json
   {

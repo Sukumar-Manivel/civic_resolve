@@ -96,7 +96,27 @@ describe("Issues Store Bounded Capacity", () => {
         category: null
       });
     }
-    const all = getIssues();
+    const all = getIssues({ limit: 100 });
     expect(all.length).toBe(MAX_STORE_CAPACITY);
+  });
+});
+
+describe("Issues Store Pagination & Payloads", () => {
+  beforeEach(() => {
+    resetStore();
+  });
+
+  it("applies limit and offset pagination correctly", () => {
+    const page1 = getIssues({ limit: 2, offset: 0 });
+    const page2 = getIssues({ limit: 2, offset: 2 });
+    expect(page1.length).toBe(2);
+    expect(page2.length).toBe(2);
+    expect(page1[0].id).not.toBe(page2[0].id);
+  });
+
+  it("formats lean list payloads with hasImage indicator", () => {
+    const list = getIssues();
+    expect(list.every((item) => typeof item.hasImage === "boolean")).toBe(true);
+    expect(list.every((item) => item.imageUrl === undefined)).toBe(true);
   });
 });

@@ -3,9 +3,9 @@ import crypto from "node:crypto";
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
+import compression from "compression";
 import issuesRoutes from "./routes/issuesRoutes.js";
 import healthRoutes from "./routes/healthRoutes.js";
-import { rateLimiter } from "./middleware/rateLimiter.js";
 
 function configureMiddleware(app) {
   app.use((req, res, next) => {
@@ -13,7 +13,7 @@ function configureMiddleware(app) {
     next();
   });
 
-  app.use(rateLimiter);
+  app.use(compression());
 
   app.use(
     helmet({
@@ -29,7 +29,7 @@ function configureMiddleware(app) {
     })
   );
   app.use(cors());
-  app.use(express.json({ limit: "5mb" }));
+  app.use(express.json({ limit: "100kb" }));
 
   const clientPath = path.resolve(process.cwd(), "client");
   app.use(express.static(clientPath, { maxAge: "1d", etag: true }));

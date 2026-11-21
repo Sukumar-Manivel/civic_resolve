@@ -11,10 +11,30 @@ describe("listIssues Controller", () => {
 
   it("responds with status 200 and issue list payload", () => {
     const res = createMockRes();
-    issuesController.listIssues({ query: { status: "Reported" } }, res);
+    issuesController.listIssues({ query: { status: "Reported", limit: "2", offset: "0" } }, res);
     expect(res.statusCode).toBe(200);
-    expect(res.body.count).toBeDefined();
+    expect(res.body.count).toBeLessThanOrEqual(2);
     expect(Array.isArray(res.body.data)).toBe(true);
+  });
+});
+
+describe("getIssueById Controller", () => {
+  beforeEach(() => {
+    issuesService.resetStore();
+  });
+
+  it("responds with status 200 when issue exists", () => {
+    const res = createMockRes();
+    issuesController.getIssueById({ params: { id: "civic-seed-001" } }, res);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.id).toBe("civic-seed-001");
+  });
+
+  it("responds with status 404 when issue does not exist", () => {
+    const res = createMockRes();
+    issuesController.getIssueById({ params: { id: "non-existent-id" } }, res);
+    expect(res.statusCode).toBe(404);
+    expect(res.body.error).toContain("not found");
   });
 });
 

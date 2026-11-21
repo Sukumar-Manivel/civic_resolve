@@ -34,6 +34,7 @@ export function rateLimiter(req, res, next) {
   rateLimits.set(ip, entry);
 
   if (entry.count > MAX_REQUESTS) {
+    res.setHeader("Retry-After", "60");
     return res.status(429).json({
       error: "Too Many Requests",
       message: "Rate limit exceeded. Please try again in 1 minute."

@@ -21,8 +21,8 @@ const TRIAGE_SCHEMA = {
 function buildCacheKey(issue) {
   const t = (issue.title || "").toLowerCase().trim();
   const d = (issue.description || "").toLowerCase().trim();
-  const loc = (issue.location || "").toLowerCase().trim();
-  return `${t}::${d}::${loc}`;
+  const c = (issue.category || "auto").toLowerCase().trim();
+  return `${t}::${d}::${c}`;
 }
 
 export function getCachedTriage(key, now = Date.now()) {

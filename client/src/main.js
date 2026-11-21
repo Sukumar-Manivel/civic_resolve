@@ -32,16 +32,29 @@ function announce(msg) {
   if (el) el.textContent = msg;
 }
 
+function setElementText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
 function updateMetrics(issues) {
   const total = issues.length;
   const reported = issues.filter((i) => i.status === "Reported").length;
   const progress = issues.filter((i) => i.status === "In Progress").length;
   const resolved = issues.filter((i) => i.status === "Resolved").length;
+  const critical = issues.filter((i) => i.priority === "Critical").length;
 
-  document.getElementById("stat-total").textContent = String(total);
-  document.getElementById("stat-reported").textContent = String(reported);
-  document.getElementById("stat-progress").textContent = String(progress);
-  document.getElementById("stat-resolved").textContent = String(resolved);
+  setElementText("stat-total", String(total));
+  setElementText("stat-reported", String(reported));
+  setElementText("stat-progress", String(progress));
+  setElementText("stat-resolved", String(resolved));
+  setElementText("stat-critical", String(critical));
+
+  setElementText("kpi-total", String(total));
+  setElementText("kpi-reported", String(reported));
+  setElementText("kpi-progress", String(progress));
+  setElementText("kpi-resolved", String(resolved));
+  setElementText("kpi-critical", String(critical));
 }
 
 function createBadge(text, colorClass) {
@@ -275,8 +288,8 @@ async function loadIssues() {
 function handleImageSelect(e) {
   const file = e.target.files[0];
   if (!file) return;
-  if (file.size > 2 * 1024 * 1024) {
-    alert("File exceeds maximum allowed size of 2MB.");
+  if (file.size > 512 * 1024) {
+    alert("File exceeds maximum allowed size of 512KB.");
     e.target.value = "";
     return;
   }
@@ -338,35 +351,63 @@ async function submitIssueForm(e) {
   }
 }
 
+function switchTab(isCitizen, tabCitizen, tabAdmin, viewCitizen, viewAdmin) {
+  tabCitizen.classList.toggle("active", isCitizen);
+  tabCitizen.setAttribute("aria-selected", isCitizen ? "true" : "false");
+  tabCitizen.setAttribute("tabindex", isCitizen ? "0" : "-1");
+
+  tabAdmin.classList.toggle("active", !isCitizen);
+  tabAdmin.setAttribute("aria-selected", isCitizen ? "false" : "true");
+  tabAdmin.setAttribute("tabindex", isCitizen ? "-1" : "0");
+
+  viewCitizen.style.display = isCitizen ? "grid" : "none";
+  viewAdmin.classList.toggle("active", !isCitizen);
+
+  const activeTab = isCitizen ? tabCitizen : tabAdmin;
+  activeTab.focus();
+  announce(`Switched to ${activeTab.textContent.trim()} view`);
+}
+
+function handleTabKey(e, isCitizen, tabCitizen, tabAdmin, viewCitizen, viewAdmin) {
+  const isArrow = ["ArrowRight", "ArrowDown", "ArrowLeft", "ArrowUp"].includes(e.key);
+  if (isArrow) {
+    e.preventDefault();
+    switchTab(!isCitizen, tabCitizen, tabAdmin, viewCitizen, viewAdmin);
+  } else if (e.key === "Home" && !isCitizen) {
+    e.preventDefault();
+    switchTab(true, tabCitizen, tabAdmin, viewCitizen, viewAdmin);
+  } else if (e.key === "End" && isCitizen) {
+    e.preventDefault();
+    switchTab(false, tabCitizen, tabAdmin, viewCitizen, viewAdmin);
+  }
+}
+
 function setupTabs() {
   const tabCitizen = document.getElementById("tab-citizen");
   const tabAdmin = document.getElementById("tab-admin");
   const viewCitizen = document.getElementById("view-citizen");
   const viewAdmin = document.getElementById("view-admin");
 
-  tabCitizen.addEventListener("click", () => {
-    tabCitizen.classList.add("active");
-    tabCitizen.setAttribute("aria-selected", "true");
-    tabAdmin.classList.remove("active");
-    tabAdmin.setAttribute("aria-selected", "false");
-    viewCitizen.style.display = "grid";
-    viewAdmin.classList.remove("active");
-  });
+  tabCitizen.addEventListener("click", () => switchTab(true, tabCitizen, tabAdmin, viewCitizen, viewAdmin));
+  tabAdmin.addEventListener("click", () => switchTab(false, tabCitizen, tabAdmin, viewCitizen, viewAdmin));
 
-  tabAdmin.addEventListener("click", () => {
-    tabAdmin.classList.add("active");
-    tabAdmin.setAttribute("aria-selected", "true");
-    tabCitizen.classList.remove("active");
-    tabCitizen.setAttribute("aria-selected", "false");
-    viewCitizen.style.display = "none";
-    viewAdmin.classList.add("active");
-  });
+  tabCitizen.addEventListener("keydown", (e) => handleTabKey(e, true, tabCitizen, tabAdmin, viewCitizen, viewAdmin));
+  tabAdmin.addEventListener("keydown", (e) => handleTabKey(e, false, tabCitizen, tabAdmin, viewCitizen, viewAdmin));
+}
+
+function debounce(fn, delayMs = 200) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delayMs);
+  };
 }
 
 function setupFilters() {
+  const debouncedLoad = debounce(loadIssues, 200);
   document.getElementById("tracker-search").addEventListener("input", (e) => {
     currentFilter.search = e.target.value.trim();
-    loadIssues();
+    debouncedLoad();
   });
 
   document.getElementById("tracker-category").addEventListener("change", (e) => {

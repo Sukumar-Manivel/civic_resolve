@@ -31,7 +31,7 @@ function validateImagePayload(image) {
   const base64Data = image.split(",")[1];
   const sizeInBytes = (base64Data.length * 3) / 4;
   if (sizeInBytes > MAX_IMAGE_BYTES) {
-    return "image size exceeds 2MB limit";
+    return "image size exceeds 512KB limit";
   }
   return null;
 }

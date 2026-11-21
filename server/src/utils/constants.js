@@ -20,4 +20,4 @@ export const DEPARTMENTS = {
   GENERAL: "Citizen Grievance Redressal Cell"
 };
 
-export const MAX_IMAGE_BYTES = 2 * 1024 * 1024; // 2MB
+export const MAX_IMAGE_BYTES = 512 * 1024; // 512KB

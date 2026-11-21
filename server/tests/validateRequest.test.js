@@ -45,13 +45,14 @@ describe("validateCreateIssue Image Validation", () => {
     expect(res.statusCode).toBe(400);
   });
 
-  it("rejects oversized base64 image exceeding 2MB limit", () => {
+  it("rejects oversized base64 image exceeding 512KB limit", () => {
     const res = createMockRes();
-    const big = "data:image/png;base64," + "A".repeat(3 * 1024 * 1024);
+    const big = "data:image/png;base64," + "A".repeat(800 * 1024);
     validateCreateIssue({
       body: { title: "Valid title", description: "Valid description", location: "Valid location", image: big }
     }, res, vi.fn());
     expect(res.statusCode).toBe(400);
+    expect(res.body.details[0]).toContain("512KB");
   });
 
   it("accepts valid issue payload and invokes next()", () => {

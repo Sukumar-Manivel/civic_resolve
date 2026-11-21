@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="./src/styles.css">
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
   <header class="site-header" role="banner">
     <div class="header-container">
       <div class="brand-wrapper">
@@ -34,6 +35,7 @@
       <span class="stat-item">Pending Triage: <strong id="stat-reported">0</strong></span>
       <span class="stat-item">Under Redressal: <strong id="stat-progress">0</strong></span>
       <span class="stat-item">Resolved: <strong id="stat-resolved">0</strong></span>
+      <span class="stat-item">Critical: <strong id="stat-critical">0</strong></span>
     </div>
   </div>
 
@@ -118,6 +120,14 @@
       <section class="card" aria-labelledby="admin-heading">
         <h2 class="card-title" id="admin-heading">🛠️ Municipal Redressal & Dispatch Console</h2>
         <p class="issue-desc">Manage complaint workflows, transition statuses, reassign departments, and record field resolution logs.</p>
+
+        <div class="admin-kpi-grid" aria-label="Administrative Key Performance Indicators">
+          <div class="kpi-card"><span class="kpi-label">Total Complaints</span><strong id="kpi-total" class="kpi-value">0</strong></div>
+          <div class="kpi-card"><span class="kpi-label">Reported</span><strong id="kpi-reported" class="kpi-value">0</strong></div>
+          <div class="kpi-card"><span class="kpi-label">In Progress</span><strong id="kpi-progress" class="kpi-value">0</strong></div>
+          <div class="kpi-card"><span class="kpi-label">Resolved</span><strong id="kpi-resolved" class="kpi-value">0</strong></div>
+          <div class="kpi-card"><span class="kpi-label">Critical</span><strong id="kpi-critical" class="kpi-value">0</strong></div>
+        </div>
 
         <div id="admin-table-wrapper" class="admin-table-container">
           <table class="admin-table" aria-label="Municipal Complaints Table">

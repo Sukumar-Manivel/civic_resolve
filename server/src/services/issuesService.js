@@ -5,14 +5,22 @@ import { triageIssue } from "./geminiTriageService.js";
 /** Bounded capacity for FIFO municipal grievance store */
 export const MAX_STORE_CAPACITY = 100;
 
-let issuesStore = SEED_ISSUES.map((issue) => ({ ...issue }));
+export const issuesStore = new Map();
 
 /**
  * Resets the in-memory grievance store to initial seed state.
  */
 export function resetStore() {
-  issuesStore = SEED_ISSUES.map((issue) => ({ ...issue }));
+  issuesStore.clear();
+  for (const issue of SEED_ISSUES) {
+    issuesStore.set(issue.id, {
+      ...issue,
+      hasImage: Boolean(issue.imageUrl)
+    });
+  }
 }
+
+resetStore();
 
 /**
  * Checks whether an issue matches given filter criteria.
@@ -32,23 +40,42 @@ export function matchesFilter(issue, { status, category, search }) {
 }
 
 /**
- * Retrieves all issues matching optional query filters.
- * @param {object} [filters={}] - Optional filters
- * @returns {Array<object>} Matching issue records
+ * Formats an issue record for list views with lean payload.
+ * @param {object} issue - Raw issue record
+ * @returns {object} Lean issue summary
  */
-export function getIssues(filters = {}) {
-  return issuesStore
-    .filter((issue) => matchesFilter(issue, filters))
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+function toLeanSummary(issue) {
+  const { imageUrl, ...rest } = issue;
+  return { ...rest, hasImage: Boolean(imageUrl) };
 }
 
 /**
- * Retrieves a single issue by its unique ID.
+ * Retrieves all issues matching optional query filters with pagination.
+ * @param {object} [filters={}] - Optional filters with limit/offset
+ * @returns {Array<object>} Matching issue records
+ */
+export function getIssues(filters = {}) {
+  const limit = Math.max(1, Math.min(100, Number(filters.limit) || 50));
+  const offset = Math.max(0, Number(filters.offset) || 0);
+  const results = [];
+
+  for (const issue of issuesStore.values()) {
+    if (matchesFilter(issue, filters)) {
+      results.push(toLeanSummary(issue));
+    }
+  }
+
+  results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  return results.slice(offset, offset + limit);
+}
+
+/**
+ * Retrieves a single issue by its unique ID with full payload.
  * @param {string} id - Issue ID
  * @returns {object|null} Found issue or null
  */
 export function getIssueById(id) {
-  return issuesStore.find((issue) => issue.id === id) || null;
+  return issuesStore.get(id) || null;
 }
 
 function buildNewIssueRecord(input, triage, id, now) {
@@ -65,6 +92,7 @@ function buildNewIssueRecord(input, triage, id, now) {
     estimatedResolutionHours: triage.estimatedResolutionHours,
     triageSource: triage.triageSource,
     imageUrl: input.image || null,
+    hasImage: Boolean(input.image),
     resolutionNotes: null,
     createdAt: now,
     updatedAt: now
@@ -72,7 +100,7 @@ function buildNewIssueRecord(input, triage, id, now) {
 }
 
 /**
- * Creates and stores a new citizen issue with AI triage.
+ * Creates and stores a new citizen issue with AI triage and O(1) FIFO eviction.
  * @param {object} input - Citizen issue payload
  * @returns {Promise<object>} Created issue record
  */
@@ -82,24 +110,25 @@ export async function createIssue(input) {
   const id = `civic-${Date.now()}-${crypto.randomBytes(3).toString("hex")}`;
   const newIssue = buildNewIssueRecord(input, triage, id, now);
 
-  if (issuesStore.length >= MAX_STORE_CAPACITY) {
-    issuesStore.pop();
+  if (issuesStore.size >= MAX_STORE_CAPACITY) {
+    const oldestKey = issuesStore.keys().next().value;
+    issuesStore.delete(oldestKey);
   }
-  issuesStore.unshift(newIssue);
+
+  issuesStore.set(id, newIssue);
   return newIssue;
 }
 
 /**
- * Updates municipal status, priority, or notes on an issue.
+ * Updates municipal status, priority, or notes on an issue with O(1) Map update.
  * @param {string} id - Issue ID
  * @param {object} updateData - Changes to apply
  * @returns {object|null} Updated issue or null if not found
  */
 export function updateIssue(id, updateData) {
-  const index = issuesStore.findIndex((issue) => issue.id === id);
-  if (index === -1) return null;
+  if (!issuesStore.has(id)) return null;
 
-  const current = issuesStore[index];
+  const current = issuesStore.get(id);
   const updated = {
     ...current,
     status: updateData.status || current.status,
@@ -111,6 +140,6 @@ export function updateIssue(id, updateData) {
     updatedAt: new Date().toISOString()
   };
 
-  issuesStore[index] = updated;
+  issuesStore.set(id, updated);
   return updated;
 }
