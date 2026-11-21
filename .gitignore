@@ -4,3 +4,5 @@ dist/
 .env
 .agents/
 demo-output/
+*.log
+
